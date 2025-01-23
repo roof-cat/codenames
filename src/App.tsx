@@ -5,7 +5,8 @@ import GameControls from './components/GameControls';
 
 const TOTAL_CARDS = 25;
 const IMAGES = Array.from({ length: 25 }, (_, i) => 
-  `https://picsum.photos/seed/${i + 1}/300/300`
+  `https://img.randme.me/?${i + 1}`
+  //`https://picsum.photos/seed/${Math.random()}/300/300`
 );
 
 function generateCards(): Card[] {
@@ -100,24 +101,36 @@ function App() {
     }));
   };
 
+  const handleRandomImage = (id: number) => {
+    setGameState(prev => {
+      const newCards = prev.cards.map(card => {
+        if (card.id === id) {
+          const url = new URL(card.imageUrl);
+          url.searchParams.set('random', Math.random().toString());
+          return { ...card, imageUrl: url.toString() };
+        }
+        return card;
+      });
+      return { ...prev, cards: newCards };
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8">Code Names</h1>
-        <GameControls
-          currentTeam={gameState.currentTeam}
-          redScore={gameState.redScore}
-          blueScore={gameState.blueScore}
-          isSpymaster={gameState.isSpymaster}
-          onToggleSpymaster={toggleSpymaster}
-          onNewGame={handleNewGame}
-        />
-        <GameBoard
-          cards={gameState.cards}
-          isSpymaster={gameState.isSpymaster}
-          onCardClick={handleCardClick}
-        />
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <GameControls
+        currentTeam={gameState.currentTeam}
+        redScore={gameState.redScore}
+        blueScore={gameState.blueScore}
+        isSpymaster={gameState.isSpymaster}
+        onToggleSpymaster={toggleSpymaster}
+        onNewGame={handleNewGame}
+      />
+      <GameBoard
+        cards={gameState.cards}
+        isSpymaster={gameState.isSpymaster}
+        onCardClick={handleCardClick}
+        onRandomImage={handleRandomImage}
+      />
     </div>
   );
 }
