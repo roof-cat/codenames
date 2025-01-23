@@ -11,7 +11,7 @@ interface GameBoardProps {
 
 const GameBoard: React.FC<GameBoardProps> = ({ cards, isSpymaster, onCardClick, onRandomImage }) => {
   return (
-    <div className="grid grid-cols-4 gap-4 p-4">
+    <div className="grid grid-cols-5 gap-4 p-4">
       {cards.map((card) => (
         <Card
           key={card.id}
